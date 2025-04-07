@@ -11,15 +11,67 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { Search, Menu, BookOpen, Calendar1Icon, ChartAreaIcon, ClipboardPenIcon, Folder, LayoutGrid, PersonStandingIcon, Receipt, User2, UserCheck2, Users2, Users2Icon, UserSquare2, UsersRound } from 'lucide-react';
+
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
+
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Patient Management',
+        href: '/patients',
+        icon: PersonStandingIcon,
+    },
+    {
+        title: 'Appointments',
+        href: '/appointments',
+        icon: Calendar1Icon,
+    },
+    {
+        title: 'Dentists',
+        href: '/clients',
+        icon: Users2,
+    },
+    {
+        title: 'Staffs',
+        href: '/staffs',
+        icon: UsersRound,
+    },
+    {
+        title: 'Case Management',
+        href: '/case-management',
+        icon: ClipboardPenIcon,
+    },
+    {
+        title: 'Billing & Invoicing',
+        href: '/billing-invoicing',
+        icon: Receipt,
+    },
+    {
+        title: 'Lab Coordination',
+        href: '/lab-coordination',
+        icon: ClipboardPenIcon,
+    },
+    {
+        title: 'Reports & Analytics',
+        href: '/reports-analytics',
+        icon: ChartAreaIcon,
+    },
+    {
+        title: 'User Management',
+        href: '/user-management',
+        icon: Users2Icon,
+    },
+    {
+        title: 'Support / Feedback',
+        href: '/support-feedback',
+        icon: UserCheck2,
     },
 ];
 

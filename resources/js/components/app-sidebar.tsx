@@ -24,8 +24,8 @@ const mainNavItems: NavItem[] = [
         icon: Calendar1Icon,
     },
     {
-        title: 'Dentists',
-        href: '/clients',
+        title: 'Clients',
+        href: '/clients/accounts',
         icon: Users2,
     },
     {
@@ -39,8 +39,8 @@ const mainNavItems: NavItem[] = [
         icon: ClipboardPenIcon,
     },
     {
-        title: 'Billing & Invoicing',
-        href: '/billing-invoicing',
+        title: 'Billing',
+        href: '/billing/adjustments',
         icon: Receipt,
     },
     {
