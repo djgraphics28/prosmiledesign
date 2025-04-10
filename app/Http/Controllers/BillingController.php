@@ -11,4 +11,8 @@ class BillingController extends Controller
     {
         return Inertia::render('billing/adjustments');
     }
+    public function payments(Request $request)
+    {
+        return Inertia::render('billing/payments');
+    }
 }

@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/clients/accounts', [ClientController::class, 'accounts'])->name('clients.accounts');
     Route::get('/clients/activity', [ClientController::class, 'activity'])->name('clients.activity');
     Route::get('/billing/adjustments', [BillingController::class, 'adjustments'])->name('billing.adjustments');
+    Route::get('/billing/payments', [BillingController::class, 'payments'])->name('billing.payments');
 });
 
 require __DIR__.'/settings.php';
