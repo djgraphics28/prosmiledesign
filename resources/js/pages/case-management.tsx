@@ -1,7 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, } from "@/components/ui/card";
+import { TrendingDownIcon, TrendingUpIcon} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -122,33 +124,90 @@ export default function CaseManagement() {
       <div className="p-4 space-y-4">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-gradient-to-br from-emerald-400 to-emerald-800 text-white pattern-wavy pattern-blue-500 pattern-bg-white pattern-size-6 pattern-opacity-20">
-            <CardHeader>
-              <CardTitle className="text-sm">NEW CASES</CardTitle>
-            </CardHeader>
-            <CardContent className="text-4xl font-bold">2</CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-sky-400 to-sky-800 text-white">
-            <CardHeader>
-              <CardTitle className="text-sm">INPRODUCTION CASES</CardTitle>
-            </CardHeader>
-            <CardContent className="text-4xl font-bold">3</CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-red-400 to-red-800 text-white">
-            <CardHeader>
-              <CardTitle className="text-sm">HOLD CASES</CardTitle>
-            </CardHeader>
-            <CardContent className="text-4xl font-bold">1</CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-orange-400 to-amber-800 text-white">
-            <CardHeader>
-              <CardTitle className="text-sm">COMPLETED CASES</CardTitle>
-            </CardHeader>
-            <CardContent className="text-4xl font-bold">10</CardContent>
-          </Card>
+        <Card className="@container/card m-0">
+          <CardHeader className="relative">
+            <CardDescription>Total Ongoing</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+              1,500
+            </CardTitle>
+            <div className="absolute right-4 top-4">
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
+                <TrendingUpIcon className="size-3" />
+                +12.5%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+                Ongoing this month <TrendingUpIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">
+              Orders for the last 6 months
+            </div>
+          </CardFooter>
+        </Card>
+        <Card className="@container/card m-0">
+          <CardHeader className="relative">
+            <CardDescription>In Productions</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+              234
+            </CardTitle>
+            <div className="absolute right-4 top-4">
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
+                <TrendingDownIcon className="size-3" />
+                -20%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              Down 20% this period <TrendingDownIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">
+              Acquisition needs attention
+            </div>
+          </CardFooter>
+        </Card>
+        <Card className="@container/card m-0">
+          <CardHeader className="relative">
+            <CardDescription>Hold</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+              78
+            </CardTitle>
+            <div className="absolute right-4 top-4">
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
+                <TrendingUpIcon className="size-3" />
+                +12.5%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              Strong orders retention <TrendingUpIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">Exceed target date</div>
+          </CardFooter>
+        </Card>
+        <Card className="@container/card m-0">
+          <CardHeader className="relative">
+            <CardDescription>Completed</CardDescription>
+            <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+              4,567
+            </CardTitle>
+            <div className="absolute right-4 top-4">
+              <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
+                <TrendingUpIcon className="size-3" />
+                +4.5%
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              Steady performance <TrendingUpIcon className="size-4" />
+            </div>
+            <div className="text-muted-foreground">Meets growth projections</div>
+          </CardFooter>
+        </Card>
         </div>
 
          {/* Filter Section */}
@@ -256,7 +315,7 @@ export default function CaseManagement() {
                               )}
                               {payment.status === 'Hold' && (
                                 <span className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-red-500 bg-red-100/60 dark:bg-gray-800 text-sm font-normal">
-                                  New
+                                  Hold
                                 </span>
                               )}
                               {payment.status === 'Completed' && (
