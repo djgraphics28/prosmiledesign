@@ -2,8 +2,40 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, } from "@/components/ui/card";
-import { TrendingDownIcon, TrendingUpIcon} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { TrendingDownIcon, TrendingUpIcon} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  HiStatusOnline,
+  HiCalendar,
+  HiClock,
+  HiUserGroup,
+  HiFlag,
+  HiTag,
+  HiOutlineLink,
+  HiOutlineDocumentText
+} from "react-icons/hi";
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -211,7 +243,7 @@ export default function CaseManagement() {
         </div>
 
          {/* Filter Section */}
-          <div className="bg-white dark:bg-gray-800 shadow-md rounded my-6 p-4">
+          <div className=" rounded my-6 p-4">
               <div className="flex justify-between items-center">
                   <div className="flex space-x-4">
                       <div>
@@ -254,19 +286,19 @@ export default function CaseManagement() {
           </div>
 
           {/* Table Section */}
-          <div className="bg-white dark:bg-gray-800 shadow-md rounded my-6">
-            <table className="min-w-max w-full table-auto text-gray-600 dark:text-gray-300">
+          <div className="shadow-md rounded my-6">
+            <table className="w-full caption-bottom text-sm">
                 <thead>
-                    <tr className="bg-gray-200 dark:bg-gray-700 text-sm leading-normal">
-                        <th className="py-3 px-6 text-left"></th>
-                        <th className="py-3 px-6 text-left">Due Date</th>
-                        <th className="py-3 px-6 text-left">Invoice Number</th>
-                        <th className="py-3 px-6 text-left">Client</th>
-                        <th className="py-3 px-6 text-left">Patient</th>
-                        <th className="py-3 px-6 text-left">Status</th>
-                        <th className="py-3 px-6 text-left">Dept</th>
-                        <th className="py-3 px-6 text-left">User</th>
-                        <th className="py-3 px-6 text-center">Actions</th>
+                    <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"></th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Due Date</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Invoice Number</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Client</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Patient</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Status</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Dept</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">User</th>
+                        <th className="text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="font-light">
@@ -280,13 +312,13 @@ export default function CaseManagement() {
 
                                   </div>
                             </td>
-                            <td className="py-3 px-6 text-left whitespace-nowrap">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                 {payment.date}
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                 {payment.acct}
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                 <div className="flex items-center">
                                     <div className="mr-2">
                                         <img className="w-6 h-6 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg"/>
@@ -294,7 +326,7 @@ export default function CaseManagement() {
                                     <span>{payment.client}</span>
                                 </div>
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                 <div className="flex items-center">
                                     <div className="mr-2">
                                         <img className="w-6 h-6 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg"/>
@@ -302,7 +334,7 @@ export default function CaseManagement() {
                                     <span>{payment.patient}</span>
                                 </div>
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                               {payment.status === 'New' && (
                                 <span className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800 text-sm font-normal">
                                   New
@@ -324,39 +356,164 @@ export default function CaseManagement() {
                                 </span>
                               )}
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                   <div className="mr-2">
                                       <img className="w-6 h-6 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg"/>
                                   </div>
                             </td>
-                            <td className="py-3 px-6 text-left">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                   <div className="mr-2">
                                       <img className="w-6 h-6 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg"/>
                                   </div>
                             </td>
-                            <td className="py-3 px-6 text-center">
+                            <td className="p-2 align-middle whitespace-nowrap">
                                 <div className="flex item-center justify-center">
-                                    <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                                    <div className="w-4 mr-2 transform hover:text-slate-500">
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
                                       </svg>
                                     </div>
-                                    <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </div>
-                                    <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                        </svg>
-                                    </div>
-                                    <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </div>
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <div className="w-4 mr-2 transform hover:text-blue-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </div>
+                                      </DialogTrigger>
+                                      <DialogContent className="w-[90%] h-[95%] sm:max-w-full flex flex-col">
+                                        <DialogHeader className="max-h-20">
+                                          <DialogTitle>Case Number# 123456 - Case Title</DialogTitle>
+                                          <DialogDescription>
+                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
+                                          </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="flex">
+                                          <div className="w-[70%] py-4 pr-4">
+                                            <ScrollArea className="h-[100%] w-[100%] rounded-md border">
+                                            <div className="flex w-full flex-wrap items-start gap-2">
+                                                {/* First Column */}
+                                                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                                                  
+                                                  {/* Status */}
+                                                  <div className="flex items-center gap-2">
+                                                    <svg className="w-5 h-5 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <circle cx="12" cy="12" r="8" strokeWidth="2" />
+                                                    </svg>
+                                                    <span className="text-body font-body text-default-font">Status</span>
+                                                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">In Research</span>
+                                                    <button className="text-sm bg-transparent border-0">
+                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
+                                                      </svg>
+                                                    </button>
+                                                  </div>
+                                                  
+                                                  {/* Due Date */}
+                                                  <div className="flex items-center gap-2">
+                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3M16 7V3M4 7h16M3 11h18M4 19h16M7 7V3h10v4" />
+                                                    </svg>
+                                                    <span className="text-body font-body text-default-font">Due date</span>
+                                                    <span className="whitespace-nowrap text-body font-body text-default-font">July 29</span>
+                                                  </div>
+                                                  
+                                                  {/* Time Estimate */}
+                                                  <div className="flex items-center gap-2">
+                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3" />
+                                                    </svg>
+                                                    <span className="text-body font-body text-default-font">Time estimate</span>
+                                                    <span className="whitespace-nowrap text-body font-body text-default-font">48h</span>
+                                                  </div>
+                                                  
+                                                  {/* Track Time */}
+                                                  <div className="flex items-center gap-2">
+                                                    <button className="text-sm bg-brand-secondary p-1 rounded-full">
+                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v18h14V3H5z" />
+                                                      </svg>
+                                                    </button>
+                                                    <span className="whitespace-nowrap text-body font-body text-default-font">1h</span>
+                                                  </div>
+                                                </div>
+
+                                                {/* Second Column */}
+                                                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                                                  
+                                                  {/* Assignees */}
+                                                  <div className="flex items-center gap-2">
+                                                    <img className="w-6 h-6 rounded-full" src="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/fychrij7dzl8wgq2zjq9.avif" alt="Assignee" />
+                                                    <button className="text-sm bg-transparent border-0">
+                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
+                                                      </svg>
+                                                    </button>
+                                                  </div>
+                                                  
+                                                  {/* Priority */}
+                                                  <div className="flex items-center gap-2">
+                                                    <svg className="w-5 h-5 text-warning-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v18h14V3H5z" />
+                                                    </svg>
+                                                    <span className="whitespace-nowrap text-body-bold font-body-bold text-warning-700">High</span>
+                                                  </div>
+                                                  
+                                                  {/* Sprint Points */}
+                                                  <div className="flex items-center gap-2">
+                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3" />
+                                                    </svg>
+                                                    <span className="whitespace-nowrap text-body font-body text-subtext-color">Empty</span>
+                                                  </div>
+                                                  
+                                                  {/* Tags */}
+                                                  <div className="flex items-center gap-2">
+                                                    <span className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                                                      <svg className="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
+                                                      </svg>
+                                                      New Feature
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+
+
+                                            </ScrollArea>
+                                          </div>
+                                          <div className="w-[30%] bg-gray-300 p-4">
+                                            Right side (40%)
+                                          </div>
+                                        </div>
+                                        <DialogFooter>
+                                          <Button type="submit">Save changes</Button>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                        <div className="w-4 mr-2 transform hover:text-rose-500">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </div>
+                                      </AlertDialogTrigger>
+                                      <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                          <AlertDialogTitle>Are you sure you want to delete this?</AlertDialogTitle>
+                                          <AlertDialogDescription>
+                                          This action cannot be undone. The data will be permanently removed.
+                                          </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                          <AlertDialogAction>Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             </td>
                         </tr>
@@ -365,7 +522,7 @@ export default function CaseManagement() {
             </table>
         </div>
         {/* Pagination */}
-        <div className="flex items-center justify-between py-3 px-6 bg-gray-100 dark:bg-gray-700 rounded-b-lg">
+        <div className="flex items-center justify-between rounded my-6rounded-b-lg">
             <span className="text-sm text-gray-600 dark:text-gray-300">Showing 1 to 10 of 50 results</span>
             <div className="flex space-x-2">
                 <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
