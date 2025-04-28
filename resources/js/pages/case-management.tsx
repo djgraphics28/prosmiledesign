@@ -1,19 +1,10 @@
-import AppLayout from '@/layouts/app-layout';
-import { TrendingDownIcon, TrendingUpIcon} from "lucide-react"
 import * as React from "react"
+import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Badge } from "@/components/ui/badge"
 import { Head } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, } from "@/components/ui/card";
-import { XAxis, CartesianGrid, AreaChart, Area } from 'recharts';
-import { ChartConfig, ChartContainer,  ChartTooltip, ChartTooltipContent,  ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { TrendingDownIcon, TrendingUpIcon} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,129 +50,12 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 
 
-
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Dashboard',
-    href: '/dashboard',
+    title: 'Case Management',
+    href: '/case-management',
   },
 ];
-
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-  ongoing: {
-    label: "In Production",
-    color: "#2563eb",
-  },
-  completed: {
-    label: "Completed",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig
-
-
-
-const chartData = [
-  { date: "2024-04-01", ongoing: 222, completed: 150 },
-  { date: "2024-04-02", ongoing: 97, completed: 180 },
-  { date: "2024-04-03", ongoing: 167, completed: 120 },
-  { date: "2024-04-04", ongoing: 242, completed: 260 },
-  { date: "2024-04-05", ongoing: 373, completed: 290 },
-  { date: "2024-04-06", ongoing: 301, completed: 340 },
-  { date: "2024-04-07", ongoing: 245, completed: 180 },
-  { date: "2024-04-08", ongoing: 409, completed: 320 },
-  { date: "2024-04-09", ongoing: 59, completed: 110 },
-  { date: "2024-04-10", ongoing: 261, completed: 190 },
-  { date: "2024-04-11", ongoing: 327, completed: 350 },
-  { date: "2024-04-12", ongoing: 292, completed: 210 },
-  { date: "2024-04-13", ongoing: 342, completed: 380 },
-  { date: "2024-04-14", ongoing: 137, completed: 220 },
-  { date: "2024-04-15", ongoing: 120, completed: 170 },
-  { date: "2024-04-16", ongoing: 138, completed: 190 },
-  { date: "2024-04-17", ongoing: 446, completed: 360 },
-  { date: "2024-04-18", ongoing: 364, completed: 410 },
-  { date: "2024-04-19", ongoing: 243, completed: 180 },
-  { date: "2024-04-20", ongoing: 89, completed: 150 },
-  { date: "2024-04-21", ongoing: 137, completed: 200 },
-  { date: "2024-04-22", ongoing: 224, completed: 170 },
-  { date: "2024-04-23", ongoing: 138, completed: 230 },
-  { date: "2024-04-24", ongoing: 387, completed: 290 },
-  { date: "2024-04-25", ongoing: 215, completed: 250 },
-  { date: "2024-04-26", ongoing: 75, completed: 130 },
-  { date: "2024-04-27", ongoing: 383, completed: 420 },
-  { date: "2024-04-28", ongoing: 122, completed: 180 },
-  { date: "2024-04-29", ongoing: 315, completed: 240 },
-  { date: "2024-04-30", ongoing: 454, completed: 380 },
-  { date: "2024-05-01", ongoing: 165, completed: 220 },
-  { date: "2024-05-02", ongoing: 293, completed: 310 },
-  { date: "2024-05-03", ongoing: 247, completed: 190 },
-  { date: "2024-05-04", ongoing: 385, completed: 420 },
-  { date: "2024-05-05", ongoing: 481, completed: 390 },
-  { date: "2024-05-06", ongoing: 498, completed: 520 },
-  { date: "2024-05-07", ongoing: 388, completed: 300 },
-  { date: "2024-05-08", ongoing: 149, completed: 210 },
-  { date: "2024-05-09", ongoing: 227, completed: 180 },
-  { date: "2024-05-10", ongoing: 293, completed: 330 },
-  { date: "2024-05-11", ongoing: 335, completed: 270 },
-  { date: "2024-05-12", ongoing: 197, completed: 240 },
-  { date: "2024-05-13", ongoing: 197, completed: 160 },
-  { date: "2024-05-14", ongoing: 448, completed: 490 },
-  { date: "2024-05-15", ongoing: 473, completed: 380 },
-  { date: "2024-05-16", ongoing: 338, completed: 400 },
-  { date: "2024-05-17", ongoing: 499, completed: 420 },
-  { date: "2024-05-18", ongoing: 315, completed: 350 },
-  { date: "2024-05-19", ongoing: 235, completed: 180 },
-  { date: "2024-05-20", ongoing: 177, completed: 230 },
-  { date: "2024-05-21", ongoing: 82, completed: 140 },
-  { date: "2024-05-22", ongoing: 81, completed: 120 },
-  { date: "2024-05-23", ongoing: 252, completed: 290 },
-  { date: "2024-05-24", ongoing: 294, completed: 220 },
-  { date: "2024-05-25", ongoing: 201, completed: 250 },
-  { date: "2024-05-26", ongoing: 213, completed: 170 },
-  { date: "2024-05-27", ongoing: 420, completed: 460 },
-  { date: "2024-05-28", ongoing: 233, completed: 190 },
-  { date: "2024-05-29", ongoing: 78, completed: 130 },
-  { date: "2024-05-30", ongoing: 340, completed: 280 },
-  { date: "2024-05-31", ongoing: 178, completed: 230 },
-  { date: "2024-06-01", ongoing: 178, completed: 200 },
-  { date: "2024-06-02", ongoing: 470, completed: 410 },
-  { date: "2024-06-03", ongoing: 103, completed: 160 },
-  { date: "2024-06-04", ongoing: 439, completed: 380 },
-  { date: "2024-06-05", ongoing: 88, completed: 140 },
-  { date: "2024-06-06", ongoing: 294, completed: 250 },
-  { date: "2024-06-07", ongoing: 323, completed: 370 },
-  { date: "2024-06-08", ongoing: 385, completed: 320 },
-  { date: "2024-06-09", ongoing: 438, completed: 480 },
-  { date: "2024-06-10", ongoing: 155, completed: 200 },
-  { date: "2024-06-11", ongoing: 92, completed: 150 },
-  { date: "2024-06-12", ongoing: 492, completed: 420 },
-  { date: "2024-06-13", ongoing: 81, completed: 130 },
-  { date: "2024-06-14", ongoing: 426, completed: 380 },
-  { date: "2024-06-15", ongoing: 307, completed: 350 },
-  { date: "2024-06-16", ongoing: 371, completed: 310 },
-  { date: "2024-06-17", ongoing: 475, completed: 520 },
-  { date: "2024-06-18", ongoing: 107, completed: 170 },
-  { date: "2024-06-19", ongoing: 341, completed: 290 },
-  { date: "2024-06-20", ongoing: 408, completed: 450 },
-  { date: "2024-06-21", ongoing: 169, completed: 210 },
-  { date: "2024-06-22", ongoing: 317, completed: 270 },
-  { date: "2024-06-23", ongoing: 480, completed: 530 },
-  { date: "2024-06-24", ongoing: 132, completed: 180 },
-  { date: "2024-06-25", ongoing: 141, completed: 190 },
-  { date: "2024-06-26", ongoing: 434, completed: 380 },
-  { date: "2024-06-27", ongoing: 448, completed: 490 },
-  { date: "2024-06-28", ongoing: 149, completed: 200 },
-  { date: "2024-06-29", ongoing: 103, completed: 160 },
-  { date: "2024-06-30", ongoing: 446, completed: 400 },
-]
 
 const payments = [
   {
@@ -303,153 +177,27 @@ const statuses: Status[] = [
 ];
 
 
-export default function Dashboard() {
-  const [timeRange, setTimeRange] = React.useState("90d")
-  
-    const filteredData = chartData.filter((item) => {
-      const date = new Date(item.date)
-      const referenceDate = new Date("2024-06-30")
-      let daysToSubtract = 90
-      if (timeRange === "30d") {
-        daysToSubtract = 30
-      } else if (timeRange === "7d") {
-        daysToSubtract = 7
-      }
-      const startDate = new Date(referenceDate)
-      startDate.setDate(startDate.getDate() - daysToSubtract)
-      return date >= startDate
-    })
+export default function CaseManagement() {
 
+  const [open, setOpen] = React.useState(false)
+  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
+    null
+  )
 
-      const [open, setOpen] = React.useState(false)
-      const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-        null
-      )
-    
-      const [date, setDate] = React.useState<Date>()
-
+  const [date, setDate] = React.useState<Date>()
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Dashboard" />
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-2 p-4 space-y-4">
-          <Card>
-            <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-              <div className="grid flex-1 gap-1 text-center sm:text-left">
-                <CardTitle>Orders Chart - Interactive</CardTitle>
-                <CardDescription>
-                  Showing total orders for the last 3 months
-                </CardDescription>
-              </div>
-              <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger
-                  className="w-[160px] rounded-lg sm:ml-auto"
-                  aria-label="Select a value"
-                >
-                  <SelectValue placeholder="Last 3 months" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  <SelectItem value="90d" className="rounded-lg">
-                    Last 3 months
-                  </SelectItem>
-                  <SelectItem value="30d" className="rounded-lg">
-                    Last 30 days
-                  </SelectItem>
-                  <SelectItem value="7d" className="rounded-lg">
-                    Last 7 days
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </CardHeader>
-            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-              <ChartContainer
-                config={chartConfig}
-                className="aspect-auto h-[250px] w-full"
-              >
-                <AreaChart data={filteredData}>
-                  <defs>
-                    <linearGradient id="fillOngoing" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-ongoing)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var((--color-ongoing)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                    <linearGradient id="fillCompleted" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-completed)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-completed)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    minTickGap={32}
-                    tickFormatter={(value) => {
-                      const date = new Date(value)
-                      return date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })
-                    }}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={
-                      <ChartTooltipContent
-                        labelFormatter={(value) => {
-                          return new Date(value).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })
-                        }}
-                        indicator="dot"
-                      />
-                    }
-                  />
-                  <Area
-                    dataKey="ongoing"
-                    type="natural"
-                    fill="url(#fillOngoing)"
-                    stroke="var(--color-ongoing)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="completed"
-                    type="natural"
-                    fill="url(#fillCompleted)"
-                    stroke="var(--color-completed)"
-                    stackId="a"
-                  />
-                  <ChartLegend content={<ChartLegendContent />} />
-                </AreaChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
+      <Head title="Case Management" />
 
-        </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2 p-4 space-y-4">
+      <div className="p-4 space-y-4">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="@container/card m-0">
           <CardHeader className="relative">
-            <CardDescription>Total Revenue</CardDescription>
+            <CardDescription>Total Ongoing</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              $1,250.00
+              1,500
             </CardTitle>
             <div className="absolute right-4 top-4">
               <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -460,18 +208,18 @@ export default function Dashboard() {
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
-              Trending up this month <TrendingUpIcon className="size-4" />
+                Ongoing this month <TrendingUpIcon className="size-4" />
             </div>
             <div className="text-muted-foreground">
-              Visitors for the last 6 months
+              Orders for the last 6 months
             </div>
           </CardFooter>
         </Card>
         <Card className="@container/card m-0">
           <CardHeader className="relative">
-            <CardDescription>New orders</CardDescription>
+            <CardDescription>In Productions</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              1,234
+              234
             </CardTitle>
             <div className="absolute right-4 top-4">
               <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -491,9 +239,9 @@ export default function Dashboard() {
         </Card>
         <Card className="@container/card m-0">
           <CardHeader className="relative">
-            <CardDescription>Active Clients</CardDescription>
+            <CardDescription>Hold</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              45,678
+              78
             </CardTitle>
             <div className="absolute right-4 top-4">
               <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -504,16 +252,16 @@ export default function Dashboard() {
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
-              Strong user retention <TrendingUpIcon className="size-4" />
+              Strong orders retention <TrendingUpIcon className="size-4" />
             </div>
-            <div className="text-muted-foreground">Engagement exceed targets</div>
+            <div className="text-muted-foreground">Exceed target date</div>
           </CardFooter>
         </Card>
         <Card className="@container/card m-0">
           <CardHeader className="relative">
-            <CardDescription>Growth Rate</CardDescription>
+            <CardDescription>Completed</CardDescription>
             <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-              4.5%
+              4,567
             </CardTitle>
             <div className="absolute right-4 top-4">
               <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -530,11 +278,52 @@ export default function Dashboard() {
           </CardFooter>
         </Card>
         </div>
-        
-      </div>
-      <div className='grid grid-cols-1 gap-4 p-4'>
-        {/* Table Section */}
-        <div className="shadow-md rounded my-6">
+
+         {/* Filter Section */}
+          <div className=" rounded my-6 p-4">
+              <div className="flex justify-between items-center">
+                  <div className="flex space-x-4">
+                      <div>
+                          <label htmlFor="date" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                              Date Range
+                          </label>
+                          <input
+                              type="date"
+                              id="date"
+                              className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                          />
+                      </div>
+                      <div>
+                          <label htmlFor="client" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                              Client
+                          </label>
+                          <input
+                              type="text"
+                              id="client"
+                              placeholder="Search client"
+                              className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                          />
+                      </div>
+                      <div>
+                          <label htmlFor="reference" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                              Reference
+                          </label>
+                          <input
+                              type="text"
+                              id="reference"
+                              placeholder="Search reference"
+                              className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                          />
+                      </div>
+                  </div>
+                  <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 dark:bg-indigo-700 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none">
+                      Apply Filters
+                  </button>
+              </div>
+          </div>
+
+          {/* Table Section */}
+          <div className="shadow-md rounded my-6">
             <table className="w-full caption-bottom text-sm">
                 <thead>
                     <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
@@ -916,9 +705,28 @@ export default function Dashboard() {
                 </tbody>
             </table>
         </div>
+        {/* Pagination */}
+        <div className="flex items-center justify-between rounded my-6rounded-b-lg">
+            <span className="text-sm text-gray-600 dark:text-gray-300">Showing 1 to 10 of 50 results</span>
+            <div className="flex space-x-2">
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
+                    Previous
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
+                    1
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
+                    2
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
+                    3
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none">
+                    Next
+                </button>
+            </div>
+        </div>
       </div>
-
-      
     </AppLayout>
   );
 }
