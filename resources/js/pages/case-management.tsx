@@ -1,3 +1,4 @@
+import * as React from "react"
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
@@ -26,16 +27,28 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 import {
-  HiStatusOnline,
-  HiCalendar,
-  HiClock,
-  HiUserGroup,
-  HiFlag,
-  HiTag,
-  HiOutlineLink,
-  HiOutlineDocumentText
-} from "react-icons/hi";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Textarea } from "@/components/ui/textarea"
+
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -147,8 +160,32 @@ const payments = [
   },
 ];
 
+type Status = {
+  value: string
+  label: string
+}
+
+const statuses: Status[] = [
+  {
+    value: "other",
+    label: "Other",
+  },
+  {
+    value: "optionone",
+    label: "Deliver Option One",
+  }
+];
+
 
 export default function CaseManagement() {
+
+  const [open, setOpen] = React.useState(false)
+  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
+    null
+  )
+
+  const [date, setDate] = React.useState<Date>()
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Case Management" />
@@ -368,11 +405,6 @@ export default function CaseManagement() {
                             </td>
                             <td className="p-2 align-middle whitespace-nowrap">
                                 <div className="flex item-center justify-center">
-                                    <div className="w-4 mr-2 transform hover:text-slate-500">
-                                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
-                                      </svg>
-                                    </div>
                                     <Dialog>
                                       <DialogTrigger asChild>
                                         <div className="w-4 mr-2 transform hover:text-blue-500">
@@ -390,107 +422,259 @@ export default function CaseManagement() {
                                           </DialogDescription>
                                         </DialogHeader>
                                         <div className="flex">
-                                          <div className="w-[70%] py-4 pr-4">
-                                            <ScrollArea className="h-[100%] w-[100%] rounded-md border">
-                                            <div className="flex w-full flex-wrap items-start gap-2">
-                                                {/* First Column */}
-                                                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
-                                                  
-                                                  {/* Status */}
-                                                  <div className="flex items-center gap-2">
-                                                    <svg className="w-5 h-5 text-success" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <circle cx="12" cy="12" r="8" strokeWidth="2" />
-                                                    </svg>
-                                                    <span className="text-body font-body text-default-font">Status</span>
-                                                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">In Research</span>
-                                                    <button className="text-sm bg-transparent border-0">
-                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
-                                                      </svg>
-                                                    </button>
+                                          <div className="w-[70%] py-4 pr-4 pt-0">
+                                            <ScrollArea className="h-[100%] w-[100%] ">
+                                              <div className="grid grid-cols-2 gap-6 p-6 text-sm rounded-md border">
+                                                <div className="space-y-6">
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Status
+                                                    </div>
+                                                    <div className="mt-1">
+                                                      <span className="inline-flex items-center px-3 py-1 text-sky-500 rounded-full gap-x-2 bg-sky-100/60 dark:bg-gray-800 text-sm font-normal">
+                                                        In Production
+                                                      </span>
+                                                    </div>
                                                   </div>
-                                                  
-                                                  {/* Due Date */}
-                                                  <div className="flex items-center gap-2">
-                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3M16 7V3M4 7h16M3 11h18M4 19h16M7 7V3h10v4" />
-                                                    </svg>
-                                                    <span className="text-body font-body text-default-font">Due date</span>
-                                                    <span className="whitespace-nowrap text-body font-body text-default-font">July 29</span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Ordered
+                                                    </div>
+                                                    <Popover>
+                                                      <PopoverTrigger asChild>
+                                                        <Button
+                                                          variant={"outline"}
+                                                          className={cn(
+                                                            "w-[240px] justify-start text-left font-normal",
+                                                            !date && ""
+                                                          )}
+                                                        >
+                                                          <CalendarIcon />
+                                                          {date ? format(date, "PPP") : <span>Apr 01, 2025 </span>}
+                                                        </Button>
+                                                      </PopoverTrigger>
+                                                      <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                          mode="single"
+                                                          selected={date}
+                                                          onSelect={setDate}
+                                                          initialFocus
+                                                        />
+                                                      </PopoverContent>
+                                                    </Popover>
                                                   </div>
-                                                  
-                                                  {/* Time Estimate */}
-                                                  <div className="flex items-center gap-2">
-                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3" />
-                                                    </svg>
-                                                    <span className="text-body font-body text-default-font">Time estimate</span>
-                                                    <span className="whitespace-nowrap text-body font-body text-default-font">48h</span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ 
+                                                      <RadioGroup defaultValue="option-one">
+                                                        <div className="flex items-center space-x-2">
+                                                          <RadioGroupItem value="option-one" id="option-one" />
+                                                          <Label htmlFor="option-one">Due</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                          <RadioGroupItem value="option-two" id="option-two" />
+                                                          <Label htmlFor="option-two">TBD</Label>
+                                                        </div>
+                                                      </RadioGroup>
+                                                    </div>
+                                                    <div className="mt-1">
+                                                    <Popover>
+                                                      <PopoverTrigger asChild>
+                                                        <Button
+                                                          variant={"outline"}
+                                                          className={cn(
+                                                            "w-[240px] justify-start text-left font-normal",
+                                                            !date && ""
+                                                          )}
+                                                        >
+                                                          <CalendarIcon />
+                                                          {date ? format(date, "PPP") : <span>Apr 10, 2025 </span>}
+                                                        </Button>
+                                                      </PopoverTrigger>
+                                                      <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                          mode="single"
+                                                          selected={date}
+                                                          onSelect={setDate}
+                                                          initialFocus
+                                                        />
+                                                      </PopoverContent>
+                                                    </Popover>
+                                                    </div>
                                                   </div>
-                                                  
-                                                  {/* Track Time */}
-                                                  <div className="flex items-center gap-2">
-                                                    <button className="text-sm bg-brand-secondary p-1 rounded-full">
-                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v18h14V3H5z" />
-                                                      </svg>
-                                                    </button>
-                                                    <span className="whitespace-nowrap text-body font-body text-default-font">1h</span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Appointment
+                                                    </div>
+                                                    <Popover>
+                                                      <PopoverTrigger asChild>
+                                                        <Button
+                                                          variant={"outline"}
+                                                          className={cn(
+                                                            "w-[240px] justify-start text-left font-normal",
+                                                            !date && ""
+                                                          )}
+                                                        >
+                                                          <CalendarIcon />
+                                                          {date ? format(date, "PPP") : <span>Apr 15, 2025 </span>}
+                                                        </Button>
+                                                      </PopoverTrigger>
+                                                      <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                          mode="single"
+                                                          selected={date}
+                                                          onSelect={setDate}
+                                                          initialFocus
+                                                        />
+                                                      </PopoverContent>
+                                                    </Popover>
+                                                  </div>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Delivery Method:	
+                                                    </div>
+                                                    <Popover open={open} onOpenChange={setOpen}>
+                                                      <PopoverTrigger asChild>
+                                                        <Button variant="outline" className="w-[150px] justify-start">
+                                                          {selectedStatus ? <>{selectedStatus.label}</> : <>Other</>}
+                                                        </Button>
+                                                      </PopoverTrigger>
+                                                      <PopoverContent className="p-0" side="right" align="start">
+                                                        <Command>
+                                                          <CommandInput placeholder="Change status..." />
+                                                          <CommandList>
+                                                            <CommandEmpty>No results found.</CommandEmpty>
+                                                            <CommandGroup>
+                                                              {statuses.map((status) => (
+                                                                <CommandItem
+                                                                  key={status.value}
+                                                                  value={status.value}
+                                                                  onSelect={(value) => {
+                                                                    setSelectedStatus(
+                                                                      statuses.find((priority) => priority.value === value) ||
+                                                                        null
+                                                                    )
+                                                                    setOpen(false)
+                                                                  }}
+                                                                >
+                                                                  {status.label}
+                                                                </CommandItem>
+                                                              ))}
+                                                            </CommandGroup>
+                                                          </CommandList>
+                                                        </Command>
+                                                      </PopoverContent>
+                                                    </Popover>
                                                   </div>
                                                 </div>
 
-                                                {/* Second Column */}
-                                                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
-                                                  
-                                                  {/* Assignees */}
-                                                  <div className="flex items-center gap-2">
-                                                    <img className="w-6 h-6 rounded-full" src="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/fychrij7dzl8wgq2zjq9.avif" alt="Assignee" />
-                                                    <button className="text-sm bg-transparent border-0">
-                                                      <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
-                                                      </svg>
-                                                    </button>
+                                                <div className="space-y-6">
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Client
+                                                    </div>
+                                                    <div className="mr-2 flex">
+                                                        <img className="w-6 h-6 rounded-full mr-2" src="https://randomuser.me/api/portraits/men/1.jpg"/>
+                                                        Client Name
+                                                    </div>
                                                   </div>
-                                                  
-                                                  {/* Priority */}
-                                                  <div className="flex items-center gap-2">
-                                                    <svg className="w-5 h-5 text-warning-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v18h14V3H5z" />
-                                                    </svg>
-                                                    <span className="whitespace-nowrap text-body-bold font-body-bold text-warning-700">High</span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Doctor
+                                                    </div>
+                                                    <div className="mr-2 flex">
+                                                        <img className="w-6 h-6 rounded-full mr-2" src="https://randomuser.me/api/portraits/men/1.jpg"/>
+                                                        Doctor Name
+                                                    </div>
                                                   </div>
-                                                  
-                                                  {/* Sprint Points */}
-                                                  <div className="flex items-center gap-2">
-                                                    <svg className="w-5 h-5 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3" />
-                                                    </svg>
-                                                    <span className="whitespace-nowrap text-body font-body text-subtext-color">Empty</span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Patient
+                                                    </div>
+                                                    <div className="mr-2 flex">
+                                                        <img className="w-6 h-6 rounded-full mr-2" src="https://randomuser.me/api/portraits/men/1.jpg"/>
+                                                        Patient Name
+                                                    </div>
                                                   </div>
-                                                  
-                                                  {/* Tags */}
-                                                  <div className="flex items-center gap-2">
-                                                    <span className="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                                      <svg className="w-4 h-4 text-body" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v14m7-7H5" />
-                                                      </svg>
-                                                      New Feature
-                                                    </span>
+
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Assign To
+                                                    </div>
+                                                    <div className="mt-1">
+                                                    Ryan Antonio
+                                                    </div>
+                                                  </div>
+                                                  <div className="flex">
+                                                    <div className="flex items-center gap-2 font-semibold pr-3 min-w-[30%]">
+                                                    ⌘ Department:	
+                                                    </div>
+                                                    <div className="mt-1">
+                                                    Waiting Design Approval
+                                                    </div>
                                                   </div>
                                                 </div>
                                               </div>
+                                              <Tabs defaultValue="products" className="w-[100%] mt-5">
+                                                <TabsList>
+                                                  <TabsTrigger value="products">Products & Services</TabsTrigger>
+                                                  <TabsTrigger value="file">Files (1)</TabsTrigger>
+                                                  <TabsTrigger value="task">Tasks</TabsTrigger>
+                                                </TabsList>
+                                                <TabsContent value="products" className="mt-2 p-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</TabsContent>
+                                                <TabsContent value="file" className="mt-2 p-3">File Directory</TabsContent>
+                                                <TabsContent value="task" className="mt-2 p-3">Task List</TabsContent>
+                                              </Tabs>
+
 
 
 
                                             </ScrollArea>
                                           </div>
-                                          <div className="w-[30%] bg-gray-300 p-4">
-                                            Right side (40%)
+                                          <div className="w-[30%]  flex flex flex-col justify-between">
+                                          <ScrollArea className="h-[80%] w-[100%] p-4 rounded-md border">
+                                              <h2 className="font-semibold text-xl pr-3">Activity</h2>
+                                              <ol className="relative">                  
+                                                  <li className="mb-4 ms-4">
+                                                      <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-[.5px] border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                                      <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 10, 2022</time>
+                                                      <h3 className="text-sm font-semibold text-gray-500 dark:text-white"> Super admin create this case</h3>
+                                                   </li>
+                                                   <li className="mb-4 ms-4">
+                                                      <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-[.5px] border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                                      <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 10, 2022</time>
+                                                      <h3 className="text-sm font-semibold text-gray-500 dark:text-white"> Assign to Ryan Antonio</h3>
+                                                   </li>
+                                                   <li className="mb-4 ms-4">
+                                                      <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-[.5px] border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                                      <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 10, 2022</time>
+                                                      <h3 className="text-sm font-semibold text-gray-500 dark:text-white"> Department waiting design approval</h3>
+                                                   </li>
+                                                   <li className="mb-4 ms-4">
+                                                      <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-[.5px] border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                                      <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 10, 2022</time>
+                                                      <h3 className="text-sm font-semibold text-gray-500 dark:text-white"> Delivery method set Other</h3>
+                                                   </li>
+                                                   <li className="mb-4 ms-4">
+                                                      <div className="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-[.5px] border border-white dark:border-gray-900 dark:bg-gray-700"></div>
+                                                      <time className="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 11, 2022</time>
+                                                      <h3 className="text-sm font-semibold text-gray-800 dark:text-white"> Ryan Antonio <br></br>Comment: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h3>
+                                                   </li>
+                                              </ol>
+                                          </ScrollArea>
+                                          <div className="grid w-full gap-1.5 mt-5">
+                                            <Label htmlFor="message">Comment</Label>
+                                            <Textarea placeholder="Type your message here." id="message" />
+                                            <Button className="mt-3">Submit</Button>
+                                          </div>
                                           </div>
                                         </div>
-                                        <DialogFooter>
-                                          <Button type="submit">Save changes</Button>
-                                        </DialogFooter>
                                       </DialogContent>
                                     </Dialog>
                                     <AlertDialog>
