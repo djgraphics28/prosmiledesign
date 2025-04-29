@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, } from "@/components/ui/card";
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { TrendingDownIcon, TrendingUpIcon, PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
     AlertDialog,
@@ -48,7 +48,16 @@ import {
     CommandList,
 } from "@/components/ui/command";
 import { Textarea } from "@/components/ui/textarea"
-
+import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -176,15 +185,98 @@ const statuses: Status[] = [
     }
 ];
 
+const clients = [
+    { id: "1", name: "John Doe" },
+    { id: "2", name: "Jane Smith" },
+    { id: "3", name: "Michael Brown" },
+    { id: "4", name: "Sophia Williams" },
+];
+
+const doctors = [
+    { id: "1", name: "Dr. Smith" },
+    { id: "2", name: "Dr. Johnson" },
+    { id: "3", name: "Dr. Williams" },
+];
+
+const patients = [
+    { id: "1", name: "John Doe" },
+    { id: "2", name: "Emily Smith" },
+    { id: "3", name: "Lucas Brown" },
+];
+
+const departments = [
+    { id: "1", name: "Design" },
+    { id: "2", name: "Production" },
+    { id: "3", name: "Quality Control" },
+];
+
+const users = [
+    { id: "1", name: "Ryan Antonio" },
+    { id: "2", name: "Sarah Johnson" },
+    { id: "3", name: "Michael Brown" },
+];
 
 export default function CaseManagement() {
-
     const [open, setOpen] = React.useState(false)
-    const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-        null
-    )
-
+    const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(null)
     const [date, setDate] = React.useState<Date>()
+    const [isAddCaseDialogOpen, setIsAddCaseDialogOpen] = React.useState(false)
+    const [newCaseData, setNewCaseData] = React.useState({
+        title: '',
+        description: '',
+        client: '',
+        doctor: '',
+        patient: '',
+        department: '',
+        assignedTo: '',
+        status: 'New',
+        dueDate: new Date(),
+        appointmentDate: new Date(),
+    })
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+        setNewCaseData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleSelectChange = (name: string, value: string) => {
+        setNewCaseData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleDateChange = (name: string, value: Date | undefined) => {
+        if (value) {
+            setNewCaseData(prev => ({
+                ...prev,
+                [name]: value
+            }))
+        }
+    }
+
+    const handleSubmitNewCase = (e: React.FormEvent) => {
+        e.preventDefault()
+        // Here you would typically send the data to your backend
+        console.log('New case submitted:', newCaseData)
+        // Reset form and close dialog
+        setNewCaseData({
+            title: '',
+            description: '',
+            client: '',
+            doctor: '',
+            patient: '',
+            department: '',
+            assignedTo: '',
+            status: 'New',
+            dueDate: new Date(),
+            appointmentDate: new Date(),
+        })
+        setIsAddCaseDialogOpen(false)
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -279,46 +371,263 @@ export default function CaseManagement() {
                     </Card>
                 </div>
 
-                {/* Filter Section */}
-                <div className=" rounded my-6 p-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex space-x-4">
-                            <div>
-                                <label htmlFor="date" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
-                                    Date Range
-                                </label>
-                                <input
-                                    type="date"
-                                    id="date"
-                                    className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="client" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
-                                    Client
-                                </label>
-                                <input
-                                    type="text"
-                                    id="client"
-                                    placeholder="Search client"
-                                    className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="reference" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
-                                    Reference
-                                </label>
-                                <input
-                                    type="text"
-                                    id="reference"
-                                    placeholder="Search reference"
-                                    className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
-                                />
-                            </div>
+                {/* Filter and Add New Case Section */}
+                <div className="flex justify-between items-center my-6">
+                    <div className="flex space-x-4">
+                        <div>
+                            <label htmlFor="date" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                                Date Range
+                            </label>
+                            <input
+                                type="date"
+                                id="date"
+                                className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            />
                         </div>
+                        <div>
+                            <label htmlFor="client" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                                Client
+                            </label>
+                            <input
+                                type="text"
+                                id="client"
+                                placeholder="Search client"
+                                className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="reference" className="text-sm font-medium text-gray-700 dark:text-gray-300 px-5">
+                                Reference
+                            </label>
+                            <input
+                                type="text"
+                                id="reference"
+                                placeholder="Search reference"
+                                className="mt-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex space-x-4">
                         <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 dark:bg-indigo-700 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 focus:outline-none">
                             Apply Filters
                         </button>
+                        <Dialog open={isAddCaseDialogOpen} onOpenChange={setIsAddCaseDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="gap-2">
+                                    <PlusIcon className="h-4 w-4" />
+                                    Add New Case
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[800px]">
+                                <DialogHeader>
+                                    <DialogTitle>Create New Case</DialogTitle>
+                                    <DialogDescription>
+                                        Fill in the details below to create a new case.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <form onSubmit={handleSubmitNewCase}>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="title">Case Title</Label>
+                                                <Input
+                                                    id="title"
+                                                    name="title"
+                                                    value={newCaseData.title}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter case title"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="status">Status</Label>
+                                                <Select
+                                                    value={newCaseData.status}
+                                                    onValueChange={(value) => handleSelectChange('status', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="New">New</SelectItem>
+                                                        <SelectItem value="InProduction">In Production</SelectItem>
+                                                        <SelectItem value="Hold">Hold</SelectItem>
+                                                        <SelectItem value="Completed">Completed</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="description">Description</Label>
+                                            <Textarea
+                                                id="description"
+                                                name="description"
+                                                value={newCaseData.description}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter case description"
+                                                rows={3}
+                                            />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Client</Label>
+                                                <Select
+                                                    value={newCaseData.client}
+                                                    onValueChange={(value) => handleSelectChange('client', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select client" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {clients.map(client => (
+                                                            <SelectItem key={client.id} value={client.id}>
+                                                                {client.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label>Doctor</Label>
+                                                <Select
+                                                    value={newCaseData.doctor}
+                                                    onValueChange={(value) => handleSelectChange('doctor', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select doctor" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {doctors.map(doctor => (
+                                                            <SelectItem key={doctor.id} value={doctor.id}>
+                                                                {doctor.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Patient</Label>
+                                                <Select
+                                                    value={newCaseData.patient}
+                                                    onValueChange={(value) => handleSelectChange('patient', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select patient" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {patients.map(patient => (
+                                                            <SelectItem key={patient.id} value={patient.id}>
+                                                                {patient.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label>Department</Label>
+                                                <Select
+                                                    value={newCaseData.department}
+                                                    onValueChange={(value) => handleSelectChange('department', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select department" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {departments.map(dept => (
+                                                            <SelectItem key={dept.id} value={dept.id}>
+                                                                {dept.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Assigned To</Label>
+                                                <Select
+                                                    value={newCaseData.assignedTo}
+                                                    onValueChange={(value) => handleSelectChange('assignedTo', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select user" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {users.map(user => (
+                                                            <SelectItem key={user.id} value={user.id}>
+                                                                {user.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label>Due Date</Label>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-full justify-start text-left font-normal",
+                                                                !newCaseData.dueDate && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                                            {newCaseData.dueDate ? format(newCaseData.dueDate, "PPP") : <span>Pick a date</span>}
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={newCaseData.dueDate}
+                                                            onSelect={(date) => handleDateChange('dueDate', date)}
+                                                            initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Appointment Date</Label>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-full justify-start text-left font-normal",
+                                                                !newCaseData.appointmentDate && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                                            {newCaseData.appointmentDate ? format(newCaseData.appointmentDate, "PPP") : <span>Pick a date</span>}
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={newCaseData.appointmentDate}
+                                                            onSelect={(date) => handleDateChange('appointmentDate', date)}
+                                                            initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type="submit">Create Case</Button>
+                                    </DialogFooter>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
 
@@ -708,56 +1017,58 @@ export default function CaseManagement() {
                                                                     </TabsContent>
                                                                     <TabsContent value="chat" className="mt-2 p-3">
                                                                         <div className="flex flex-col space-y-4">
-                                                                            {/* Message from other user */}
-                                                                            <div className="flex items-start">
-                                                                                <img src="https://randomuser.me/api/portraits/men/1.jpg" className="w-8 h-8 rounded-full mr-3" />
-                                                                                <div className="flex flex-col">
-                                                                                    <div className="flex items-center space-x-2">
-                                                                                        <span className="font-medium text-sm">Ryan Antonio</span>
-                                                                                        <span className="text-xs text-gray-500">10:23 AM</span>
-                                                                                    </div>
-                                                                                    <div className="bg-gray-100 rounded-lg p-3 mt-1 max-w-md">
-                                                                                        <p className="text-sm">Hi, I've reviewed the design and made some adjustments to the crown specifications. Can you take a look?</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            {/* Message from current user */}
-                                                                            <div className="flex items-start justify-end">
-                                                                                <div className="flex flex-col items-end">
-                                                                                    <div className="flex items-center space-x-2">
-                                                                                        <span className="text-xs text-gray-500">10:25 AM</span>
-                                                                                        <span className="font-medium text-sm">You</span>
-                                                                                    </div>
-                                                                                    <div className="bg-blue-500 text-white rounded-lg p-3 mt-1 max-w-md">
-                                                                                        <p className="text-sm">Sure, I'll check it right away. The previous measurements were slightly off.</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <img src="https://randomuser.me/api/portraits/men/2.jpg" className="w-8 h-8 rounded-full ml-3" />
-                                                                            </div>
-
-                                                                            {/* Message from other user with file attachment */}
-                                                                            <div className="flex items-start">
-                                                                                <img src="https://randomuser.me/api/portraits/men/1.jpg" className="w-8 h-8 rounded-full mr-3" />
-                                                                                <div className="flex flex-col">
-                                                                                    <div className="flex items-center space-x-2">
-                                                                                        <span className="font-medium text-sm">Ryan Antonio</span>
-                                                                                        <span className="text-xs text-gray-500">10:30 AM</span>
-                                                                                    </div>
-                                                                                    <div className="bg-gray-100 rounded-lg p-3 mt-1 max-w-md">
-                                                                                        <p className="text-sm mb-2">I've attached the updated design files here.</p>
-                                                                                        <div className="flex items-center bg-white p-2 rounded border">
-                                                                                            <svg className="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                                                            </svg>
-                                                                                            <span className="text-sm text-blue-500">updated_design.pdf</span>
+                                                                            <ScrollArea className="h-[80%] w-[100%] p-4 rounded-md border">
+                                                                                {/* Message from other user */}
+                                                                                <div className="flex items-start">
+                                                                                    <img src="https://randomuser.me/api/portraits/men/1.jpg" className="w-8 h-8 rounded-full mr-3" />
+                                                                                    <div className="flex flex-col">
+                                                                                        <div className="flex items-center space-x-2">
+                                                                                            <span className="font-medium text-sm dark:text-gray-200">Ryan Antonio</span>
+                                                                                            <span className="text-xs text-gray-500 dark:text-gray-400">10:23 AM</span>
+                                                                                        </div>
+                                                                                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 mt-1 max-w-md">
+                                                                                            <p className="text-sm dark:text-gray-300">Hi, I've reviewed the design and made some adjustments to the crown specifications. Can you take a look?</p>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
+
+                                                                                {/* Message from current user */}
+                                                                                <div className="flex items-start justify-end">
+                                                                                    <div className="flex flex-col items-end">
+                                                                                        <div className="flex items-center space-x-2">
+                                                                                            <span className="text-xs text-gray-500 dark:text-gray-400">10:25 AM</span>
+                                                                                            <span className="font-medium text-sm dark:text-gray-200">You</span>
+                                                                                        </div>
+                                                                                        <div className="bg-blue-500 text-white rounded-lg p-3 mt-1 max-w-md dark:bg-blue-600">
+                                                                                            <p className="text-sm">Sure, I'll check it right away. The previous measurements were slightly off.</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <img src="https://randomuser.me/api/portraits/men/2.jpg" className="w-8 h-8 rounded-full ml-3" />
+                                                                                </div>
+
+                                                                                {/* Message from other user with file attachment */}
+                                                                                <div className="flex items-start">
+                                                                                    <img src="https://randomuser.me/api/portraits/men/1.jpg" className="w-8 h-8 rounded-full mr-3" />
+                                                                                    <div className="flex flex-col">
+                                                                                        <div className="flex items-center space-x-2">
+                                                                                            <span className="font-medium text-sm dark:text-gray-200">Ryan Antonio</span>
+                                                                                            <span className="text-xs text-gray-500 dark:text-gray-400">10:30 AM</span>
+                                                                                        </div>
+                                                                                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 mt-1 max-w-md">
+                                                                                            <p className="text-sm mb-2 dark:text-gray-300">I've attached the updated design files here.</p>
+                                                                                            <div className="flex items-center bg-white dark:bg-gray-700 p-2 rounded border dark:border-gray-600">
+                                                                                                <svg className="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                                                                </svg>
+                                                                                                <span className="text-sm text-blue-500 dark:text-blue-400">updated_design.pdf</span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </ScrollArea>
 
                                                                             {/* Chat input */}
-                                                                            <div className="mt-4 border-t pt-4">
+                                                                            <div className="mt-4 border-t dark:border-gray-700 pt-4">
                                                                                 <form onSubmit={(e) => {
                                                                                     e.preventDefault();
                                                                                     // Add submit logic here
@@ -766,35 +1077,34 @@ export default function CaseManagement() {
                                                                                         <input
                                                                                             type="text"
                                                                                             placeholder="Type a message..."
-                                                                                            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                                            className="flex-1 p-2 border dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                                                                                         />
-                                                                                        <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                                                                        <button type="submit" className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
                                                                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                                                                             </svg>
                                                                                         </button>
                                                                                     </div>
                                                                                     <div className="flex items-center space-x-2">
-                                                                                        <label className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded">
+                                                                                        <label className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                                                                                             <input type="file" className="hidden" accept=".pdf,.doc,.docx" />
-                                                                                            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                                                                             </svg>
-                                                                                            <span className="text-sm text-gray-500">Attach File</span>
+                                                                                            <span className="text-sm text-gray-500 dark:text-gray-400">Attach File</span>
                                                                                         </label>
-                                                                                        <label className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded">
+                                                                                        <label className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                                                                                             <input type="file" className="hidden" accept="image/*" />
-                                                                                            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                                                             </svg>
-                                                                                            <span className="text-sm text-gray-500">Upload Image</span>
+                                                                                            <span className="text-sm text-gray-500 dark:text-gray-400">Upload Image</span>
                                                                                         </label>
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
-                                                                    </TabsContent>
-                                                                </Tabs>
+                                                                    </TabsContent>                                                                </Tabs>
                                                             </ScrollArea>
                                                         </div>
                                                         <div className="w-[30%]  flex flex flex-col justify-between">
