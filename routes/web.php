@@ -19,6 +19,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/case-management', function () {
         return Inertia::render('case-management');
     })->name('case-management');
+    Route::get('/viewer', function () {
+        return Inertia::render('viewer');
+    })->name('viewer');
 
     Route::get('/clients/accounts', [ClientController::class, 'accounts'])->name('clients.accounts');
     Route::get('/clients/activity', [ClientController::class, 'activity'])->name('clients.activity');
