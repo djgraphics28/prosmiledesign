@@ -216,6 +216,22 @@ const users = [
     { id: "3", name: "Michael Brown" },
 ];
 
+const mediaFiles = [
+    { name: 'photo1.jpg', type: 'image', src: 'https://placehold.co/600x400' },
+    { name: 'design.png', type: 'image', src: 'https://placehold.co/600x400' },
+    { name: 'manual.pdf', type: 'pdf', src: 'https://placehold.co/600x400' },
+    { name: 'model.glb', type: '3d', src: '/media/model.glb' },
+    { name: 'photo2.jpg', type: 'image', src: 'https://placehold.co/600x400' },
+    // Add more as needed
+  ];
+  
+const getThumbnail = (file: { type: string; src: string }) => {
+    if (file.type === 'image') return file.src;
+    if (file.type === 'pdf') return 'https://placehold.co/600x400';
+    if (file.type === '3d') return 'https://placehold.co/600x400';
+    return 'https://placehold.co/600x400';
+};
+
 export default function CaseManagement() {
     const [open, setOpen] = React.useState(false)
     const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(null)
@@ -731,8 +747,8 @@ export default function CaseManagement() {
                                                         </DialogDescription>
                                                     </DialogHeader>
                                                     <div className="flex">
-                                                        <div className="w-[70%] py-4 pr-4 pt-0">
-                                                            <ScrollArea className="h-[100%] w-[100%] ">
+                                                        <div className="w-[70%] py-4 pr-4 pt-0 pb-3">
+                                                            <ScrollArea className="h-[83vh] w-[100%] ">
                                                                 <div className="grid grid-cols-2 gap-6 p-6 text-sm rounded-md border">
                                                                     <div className="space-y-6">
                                                                         <div className="flex">
@@ -985,14 +1001,34 @@ export default function CaseManagement() {
                                                                     </TabsContent>
                                                                     <TabsContent value="file" className="mt-2 p-3">
                                                                         <div className="space-y-2">
-                                                                            <div className="flex items-center justify-between p-2 border rounded">
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                                                    </svg>
-                                                                                    <span>Prescription.pdf</span>
+                                                                            <div className="p-6 pl-0 pt-0">
+                                                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                                                                                    {mediaFiles.map((file, idx) => (
+                                                                                    <div key={idx} className="bg-card text-card-foreground flex flex-col rounded-xl pb-4 shadow-sm">
+                                                                                        <div className="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden rounded">
+                                                                                        <img
+                                                                                            src={getThumbnail(file)}
+                                                                                            alt={file.name}
+                                                                                            className="object-cover w-full h-full"
+                                                                                        />
+                                                                                        </div>
+                                                                                        <div className="text-sm text-gray-800 dark:text-white px-3 py-3 pb-0">{file.name}</div>
+                                                                                        <Button
+                                                                                            className="mt-3 text-[12px] px-1 py-1"
+                                                                                        >
+                                                                                            Download
+                                                                                        </Button>
+                                                                                        {file.name.toLowerCase().endsWith('.glb') && (
+                                                                                            <Button
+                                                                                                className="mt-3 text-[12px]"
+                                                                                                onClick={() => window.open('/viewer', '_blank')}
+                                                                                            >
+                                                                                                3D view
+                                                                                            </Button>
+                                                                                        )}
+                                                                                    </div>
+                                                                                    ))}
                                                                                 </div>
-                                                                                <button className="text-blue-500 hover:text-blue-700">Download</button>
                                                                             </div>
                                                                         </div>
                                                                     </TabsContent>
@@ -1017,7 +1053,7 @@ export default function CaseManagement() {
                                                                     </TabsContent>
                                                                     <TabsContent value="chat" className="mt-2 p-3">
                                                                         <div className="flex flex-col space-y-4">
-                                                                            <ScrollArea className="h-[80%] w-[100%] p-4 rounded-md border">
+                                                                            <ScrollArea className="h-[80%] w-[100%] p-4 rounded-md border ">
                                                                                 {/* Message from other user */}
                                                                                 <div className="flex items-start">
                                                                                     <img src="https://randomuser.me/api/portraits/men/1.jpg" className="w-8 h-8 rounded-full mr-3" />
@@ -1107,8 +1143,8 @@ export default function CaseManagement() {
                                                                     </TabsContent>                                                                </Tabs>
                                                             </ScrollArea>
                                                         </div>
-                                                        <div className="w-[30%]  flex flex flex-col justify-between">
-                                                            <ScrollArea className="h-[80%] w-[100%] p-4 rounded-md border">
+                                                        <div className="w-[30%]  flex flex flex-col justify-between justify-start">
+                                                            <ScrollArea className="h-[60vh] w-[100%] p-4 rounded-md border">
                                                                 <h2 className="font-semibold text-xl pr-3">Activity</h2>
                                                                 <ol className="relative">
                                                                     <li className="mb-4 ms-4">
