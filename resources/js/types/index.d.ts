@@ -41,3 +41,15 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Status {
+    value: string;
+    label: string;
+}
+
+export interface Tasks {
+    label: string;
+    due: string;
+    status: "completed" | "in-progress" | "pending";
+    checked: boolean;
+};
