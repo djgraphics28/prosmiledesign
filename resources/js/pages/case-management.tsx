@@ -5,21 +5,14 @@ import { type BreadcrumbItem } from "@/types";
 import { Head } from "@inertiajs/react";
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ActivityLog from "@/components/case/activity-log";
 import SummaryCard from "@/components/general/summary-card";
-import CaseProductsTab from "@/components/case/case-tab/case-product-tab";
-import CaseFilesTab from "@/components/case/case-tab/case-files-tab";
-import CaseTasksTab from "@/components/case/case-tab/case-task-tab";
-import CaseDetails from "@/components/case/case-detail";
 import Toolbar from "@/components/case/case-toolbar";
 import CasePageContent from "@/components/case/case-main-tab/casedetail-tab";
 import { ChatBox } from "@/components/case/case-main-tab/casechat-tab";
 import { ChatBoxSupplier } from "@/components/case/case-main-tab/casechat-supplier-tab";
 import Pagination from "@/components/general/pagination";
 import DeleteAlertDialog from "@/components/general/delete-alert";
-import Viewer from "@/components/general/3d-viewer";
 import { Status, Tasks } from "@/types/index";
 
 
